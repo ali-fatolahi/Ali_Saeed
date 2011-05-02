@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+<script type="text/javascript">
+    var map = null;
+    function GetMap() {
+        // Initialize the map
+        map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), { credentials: "ArLeGdHOcc5h7j3L4W37oFGcU9E-LF3tAZi4o0DfhXbPJ8aiyTGbIDNHex08R2u7", mapTypeId: "r" });
+    }
+    function ClickGeocode(credentials)
+    {
+        map.getCredentials(MakeGeocodeRequest);
+    }
+    function MakeGeocodeRequest(credentials) {
+        var geocodeRequest = "http://dev.virtualearth.net/REST/v1/Locations/" + document.getElementById('txtQuery').value + "?output=json&jsonp=GeocodeCallback&key=" + credentials;
+        CallRestService(geocodeRequest);
+    }
+    function CallRestService(request) {
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        script.setAttribute("src", request);
+        document.body.appendChild(script);
+    }
+    function GeocodeCallback(result) {
+        alert("Found location: " + result.resourceSets[0].resources[0].name);
+        if (result &&
+        result.resourceSets &&
+        result.resourceSets.length > 0 &&
+        result.resourceSets[0].resources &&
+        result.resourceSets[0].resources.length > 0)
+        {
+            // Set the map view using the returned bounding box
+            var bbox = result.resourceSets[0].resources[0].bbox;
+            30
+            var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]), new Microsoft.Maps.Location(bbox[2], bbox[3]));
+            map.setView({ bounds: viewBoundaries});
+            // Add a pushpin at the found location
+            var location = new Microsoft.Maps.Location(result.resourceSets[0].resources[0].point.coordinates[0], result.resourceSets[0].resources[0].point.coordinates[1]);
+            var pushpin = new Microsoft.Maps.Pushpin(location);
+            map.entities.push(pushpin);
+        }
+    }
+    function SetZoom() {
+        var zoomLevel = parseInt(document.getElementById('txtZoom').value);
+        map.setView({ zoom: zoomLevel });
+    }
+</script>
+</head>
+<body onload="GetMap();">
+<div id='mapDiv' style="position:relative; width:400px; height:400px;"></div>
+<input id="txtQuery" type="text" value="Portland"/>
+<input type="button" value="Geocode" onclick="ClickGeocode()"/>
+<input id="txtZoom" type="text" value="1"/>
+<input id="btnZoom" type="button" value="Click to set the zoom level" onclick="SetZoom();"/>
+</body>

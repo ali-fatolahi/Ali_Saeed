@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+<script type="text/javascript">
+    var map = null;
+    function GetMap() {
+        map = new Microsoft.Maps.Map(document.getElementById("mapDiv"), { credentials: "ArLeGdHOcc5h7j3L4W37oFGcU9E-LF3tAZi4o0DfhXbPJ8aiyTGbIDNHex08R2u7", mapTypeId: Microsoft.Maps.MapTypeId.road });
+    }
+    function SetZoom() {
+        var zoomLevel = parseInt(document.getElementById('txtZoom').value);
+        map.setView({ zoom: zoomLevel });
+    }
+</script>
+</head>
+<body onload="GetMap();">
+<div id='mapDiv' style="position:relative; width:500px; height:500px;"></div>
+Zoom Level:
+<input id="txtZoom" type="text" value="1"/>
+<input id="btnZoom" type="button" value="Click to set the zoom level" onclick="SetZoom();"/>
+</body>
+</html>
