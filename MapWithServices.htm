@@ -25,22 +25,26 @@
         document.body.appendChild(script);
     }
     function GeocodeCallback(result) {
-        alert("Found location: " + result.resourceSets[0].resources[0].name);
         if (result &&
         result.resourceSets &&
         result.resourceSets.length > 0 &&
-        result.resourceSets[0].resources &&
-        result.resourceSets[0].resources.length > 0)
+        result.resourceSets[0].resources)
         {
-            // Set the map view using the returned bounding box
-            var bbox = result.resourceSets[0].resources[0].bbox;
-            30
-            var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]), new Microsoft.Maps.Location(bbox[2], bbox[3]));
-            map.setView({ bounds: viewBoundaries});
-            // Add a pushpin at the found location
-            var location = new Microsoft.Maps.Location(result.resourceSets[0].resources[0].point.coordinates[0], result.resourceSets[0].resources[0].point.coordinates[1]);
-            var pushpin = new Microsoft.Maps.Pushpin(location);
-            map.entities.push(pushpin);
+            for (i=0;i<result.resourceSets[0].resources.length;i++) {
+                alert("Found location: " + result.resourceSets[0].resources[i].name);
+                if (result.resourceSets[0].resources.length > 0)
+                {
+                    // Set the map view using the returned bounding box
+                    var bbox = result.resourceSets[0].resources[i].bbox;
+                    30
+                    var viewBoundaries = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(bbox[0], bbox[1]), new Microsoft.Maps.Location(bbox[2], bbox[3]));
+                    map.setView({ bounds: viewBoundaries});
+                    // Add a pushpin at the found location
+                    var location = new Microsoft.Maps.Location(result.resourceSets[0].resources[i].point.coordinates[0], result.resourceSets[0].resources[i].point.coordinates[1]);
+                    var pushpin = new Microsoft.Maps.Pushpin(location);
+                    map.entities.push(pushpin);
+                }
+            }
         }
     }
     function SetZoom() {
